@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
+import { Calendar, MapPin, Briefcase, Clock } from "lucide-react";
 
 const Jobs = () => {
   const navigate = useNavigate();
@@ -9,48 +10,55 @@ const Jobs = () => {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen pt-24">
+      <div className="min-h-screen pt-24 bg-gray-50">
         <div className="container mx-auto px-4">
-          <h1 className="text-4xl font-bold mb-8">Offres d'emploi</h1>
-          <div className="grid md:grid-cols-2 gap-6">
-            {jobs.map((job, index) => (
-              <Card key={index} className="p-6 hover-scale">
-                <h2 className="text-2xl font-bold mb-2">{job.title}</h2>
-                <p className="text-muted-foreground mb-4">{job.location}</p>
-                <p className="mb-4">{job.shortDescription}</p>
-                <Button onClick={() => navigate(`/jobs/${index}`)}>
-                  Voir plus
-                </Button>
-              </Card>
-            ))}
+          <h1 className="text-4xl font-bold mb-8 text-primary">Offres d'emploi</h1>
+          <div className="max-w-4xl mx-auto">
+            <Card className="p-6 hover:shadow-lg transition-shadow duration-300">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
+                <h2 className="text-2xl font-bold text-primary mb-2 md:mb-0">Conseiller Immobilier Senior</h2>
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-secondary/10 text-secondary">
+                  CDI
+                </span>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <MapPin className="h-4 w-4" />
+                  <span>Paris, France</span>
+                </div>
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Briefcase className="h-4 w-4" />
+                  <span>Département Commercial</span>
+                </div>
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Calendar className="h-4 w-4" />
+                  <span>Publié le: 15 Mars 2024</span>
+                </div>
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Clock className="h-4 w-4" />
+                  <span>Date limite: 15 Avril 2024</span>
+                </div>
+              </div>
+
+              <p className="text-muted-foreground mb-6">
+                Nous recherchons un conseiller immobilier expérimenté pour rejoindre notre équipe dynamique. 
+                Le candidat idéal aura une excellente connaissance du marché immobilier parisien et une 
+                capacité démontrée à développer et maintenir des relations clients durables.
+              </p>
+
+              <Button 
+                onClick={() => navigate("/jobs/conseiller-senior")} 
+                className="w-full md:w-auto"
+              >
+                Voir plus
+              </Button>
+            </Card>
           </div>
         </div>
       </div>
     </>
   );
 };
-
-const jobs = [
-  {
-    title: "Conseiller Immobilier Senior",
-    location: "Paris",
-    shortDescription: "Nous recherchons un conseiller immobilier expérimenté pour rejoindre notre équipe dynamique."
-  },
-  {
-    title: "Gestionnaire de Patrimoine",
-    location: "Lyon",
-    shortDescription: "Poste à pourvoir pour un gestionnaire de patrimoine spécialisé dans l'immobilier de luxe."
-  },
-  {
-    title: "Agent Immobilier Junior",
-    location: "Bordeaux",
-    shortDescription: "Débutez votre carrière dans l'immobilier au sein d'une entreprise innovante."
-  },
-  {
-    title: "Responsable Marketing Digital",
-    location: "Paris",
-    shortDescription: "Prenez en charge notre stratégie marketing digital et développez notre présence en ligne."
-  }
-];
 
 export default Jobs;
