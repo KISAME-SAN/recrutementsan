@@ -14,24 +14,29 @@ const Login = () => {
   const { toast } = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const success = login(email, password);
+    setIsLoading(true);
     
-    if (success) {
-      toast({
-        title: "Connexion réussie",
-        description: "Bienvenue dans votre espace administrateur",
-      });
-      navigate("/");
-    } else {
+    const { error } = await login(email, password);
+    
+    if (error) {
       toast({
         title: "Erreur de connexion",
         description: "Email ou mot de passe incorrect",
         variant: "destructive",
       });
+    } else {
+      toast({
+        title: "Connexion réussie",
+        description: "Bienvenue dans votre espace",
+      });
+      navigate("/");
     }
+    
+    setIsLoading(false);
   };
 
   return (
@@ -49,6 +54,7 @@ const Login = () => {
                 placeholder="votre@email.com" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                disabled={isLoading}
               />
             </div>
             <div>
@@ -58,9 +64,12 @@ const Login = () => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                disabled={isLoading}
               />
             </div>
-            <Button className="w-full" type="submit">Se connecter</Button>
+            <Button className="w-full" type="submit" disabled={isLoading}>
+              {isLoading ? "Connexion..." : "Se connecter"}
+            </Button>
           </form>
           <p className="text-center mt-4 text-sm text-muted-foreground">
             Pas encore de compte?{" "}
