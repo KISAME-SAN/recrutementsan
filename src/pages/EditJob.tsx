@@ -70,6 +70,7 @@ const EditJob = () => {
           french_level: values.frenchLevel,
           english_level: values.englishLevel,
           wolof_level: values.wolofLevel,
+          updated_at: new Date().toISOString(),
         })
         .eq("id", id);
 
