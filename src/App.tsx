@@ -16,6 +16,7 @@ import EditJob from "./pages/EditJob";
 import Apply from "./pages/Apply";
 import ManageApplications from "./pages/ManageApplications";
 import JobApplications from "./pages/JobApplications";
+import ApplicationDetails from "./pages/ApplicationDetails";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +40,7 @@ const App = () => (
             <Route path="/admin/edit-job/:id" element={<EditJob />} />
             <Route path="/admin/applications" element={<ManageApplications />} />
             <Route path="/admin/applications/:id" element={<JobApplications />} />
+            <Route path="/admin/application/:id" element={<ApplicationDetails />} />
           </Routes>
         </BrowserRouter>
       </AdminProvider>

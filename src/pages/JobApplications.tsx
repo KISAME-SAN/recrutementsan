@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Navbar from "@/components/Navbar";
 import {
@@ -17,21 +17,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { Eye, FileText } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
-import { useState } from "react";
 
 const JobApplications = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [selectedApplication, setSelectedApplication] = useState<any>(null);
 
   const { data: applications, isLoading } = useQuery({
     queryKey: ["job-applications", id],
@@ -168,7 +161,7 @@ const JobApplications = () => {
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => setSelectedApplication(application)}
+                        onClick={() => navigate(`/admin/application/${application.id}`)}
                         title="Voir les détails"
                       >
                         <Eye className="h-5 w-5 text-primary" />
@@ -181,91 +174,6 @@ const JobApplications = () => {
           </div>
         </div>
       </div>
-
-      <Dialog
-        open={!!selectedApplication}
-        onOpenChange={() => setSelectedApplication(null)}
-      >
-        <DialogContent className="max-w-3xl">
-          <DialogHeader>
-            <DialogTitle>
-              Candidature de {selectedApplication?.first_name}{" "}
-              {selectedApplication?.last_name}
-            </DialogTitle>
-          </DialogHeader>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <h3 className="font-semibold mb-2">Informations personnelles</h3>
-              <p>
-                <span className="font-medium">Genre:</span>{" "}
-                {selectedApplication?.gender}
-              </p>
-              <p>
-                <span className="font-medium">Âge:</span>{" "}
-                {selectedApplication?.age} ans
-              </p>
-              <p>
-                <span className="font-medium">Email:</span>{" "}
-                {selectedApplication?.email}
-              </p>
-              <p>
-                <span className="font-medium">Téléphone:</span>{" "}
-                {selectedApplication?.phone}
-              </p>
-            </div>
-
-            <div>
-              <h3 className="font-semibold mb-2">Formation et expérience</h3>
-              <p>
-                <span className="font-medium">Diplôme:</span>{" "}
-                {selectedApplication?.diploma}
-              </p>
-              <p>
-                <span className="font-medium">Années d'expérience:</span>{" "}
-                {selectedApplication?.years_of_experience}
-              </p>
-              {selectedApplication?.previous_company && (
-                <p>
-                  <span className="font-medium">Entreprise précédente:</span>{" "}
-                  {selectedApplication?.previous_company}
-                </p>
-              )}
-            </div>
-          </div>
-
-          <div className="mt-4">
-            <h3 className="font-semibold mb-2">Expérience professionnelle</h3>
-            <p className="whitespace-pre-wrap">
-              {selectedApplication?.professional_experience}
-            </p>
-          </div>
-
-          <div className="mt-4">
-            <h3 className="font-semibold mb-2">Compétences</h3>
-            <p className="whitespace-pre-wrap">{selectedApplication?.skills}</p>
-          </div>
-
-          <div className="mt-4 flex gap-4">
-            <Button
-              onClick={async () => {
-                const url = await getFileUrl(selectedApplication?.cv_url);
-                window.open(url, "_blank");
-              }}
-            >
-              Voir le CV
-            </Button>
-            <Button
-              onClick={async () => {
-                const url = await getFileUrl(selectedApplication?.cover_letter_url);
-                window.open(url, "_blank");
-              }}
-            >
-              Voir la lettre de motivation
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
     </>
   );
 };
