@@ -10,6 +10,7 @@ import JobDetails from "./pages/JobDetails";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Admin from "./pages/Admin";
+import CreateJob from "./pages/CreateJob";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/admin/create-job" element={<CreateJob />} />
           </Routes>
         </BrowserRouter>
       </AdminProvider>
