@@ -16,13 +16,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { LanguageLevels } from "@/components/job-form/LanguageLevels";
+import { ContractTypeField } from "@/components/job-form/ContractTypeField";
 
 const formSchema = z.object({
   title: z.string().min(1, "Le titre est requis"),
@@ -37,7 +32,9 @@ const formSchema = z.object({
   softSkills: z.string().min(1, "Les compétences comportementales sont requises"),
   tools: z.string().min(1, "Les outils à maîtriser sont requis"),
   experience: z.string().min(1, "L'expérience requise est requise"),
-  languageLevel: z.string().min(1, "Le niveau linguistique est requis"),
+  frenchLevel: z.string().min(1, "Le niveau en français est requis"),
+  englishLevel: z.string().min(1, "Le niveau en anglais est requis"),
+  wolofLevel: z.string().min(1, "Le niveau en wolof est requis"),
 });
 
 const CreateJob = () => {
@@ -59,15 +56,15 @@ const CreateJob = () => {
       softSkills: "",
       tools: "",
       experience: "",
-      languageLevel: "",
+      frenchLevel: "",
+      englishLevel: "",
+      wolofLevel: "",
     },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsSubmitting(true);
     try {
-      // Ici, nous simulons la création d'une offre
-      // Dans un cas réel, nous enverrions les données à une API
       console.log("Offre créée:", {
         ...values,
         createdAt: new Date().toISOString(),
@@ -129,36 +126,14 @@ const CreateJob = () => {
                     <FormItem>
                       <FormLabel>Lieu de travail</FormLabel>
                       <FormControl>
-                        <Input placeholder="Ex: Paris, France" {...field} />
+                        <Input placeholder="Ex: Dakar, Sénégal" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                <FormField
-                  control={form.control}
-                  name="contractType"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Type de contrat</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Sélectionnez le type de contrat" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="CDI">CDI</SelectItem>
-                          <SelectItem value="CDD">CDD</SelectItem>
-                          <SelectItem value="Stage">Stage</SelectItem>
-                          <SelectItem value="Alternance">Alternance</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <ContractTypeField form={form} />
 
                 <FormField
                   control={form.control}
@@ -166,19 +141,9 @@ const CreateJob = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Département</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Sélectionnez le département" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="Commercial">Commercial</SelectItem>
-                          <SelectItem value="Marketing">Marketing</SelectItem>
-                          <SelectItem value="Technique">Technique</SelectItem>
-                          <SelectItem value="RH">Ressources Humaines</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <FormControl>
+                        <Input placeholder="Ex: Marketing Digital" {...field} />
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -205,7 +170,7 @@ const CreateJob = () => {
                     <FormItem>
                       <FormLabel>Diplôme exigé</FormLabel>
                       <FormControl>
-                        <Input placeholder="Ex: Bac +3 en Commerce/Immobilier" {...field} />
+                        <Input placeholder="Ex: Master en Marketing Digital" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -302,29 +267,14 @@ const CreateJob = () => {
                   )}
                 />
 
-                <FormField
-                  control={form.control}
-                  name="languageLevel"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Niveau linguistique exigé</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Sélectionnez le niveau requis" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="Débutant">Débutant</SelectItem>
-                          <SelectItem value="Intermédiaire">Intermédiaire</SelectItem>
-                          <SelectItem value="Avancé">Avancé</SelectItem>
-                          <SelectItem value="Bilingue">Bilingue</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold">Niveaux linguistiques exigés</h3>
+                  <div className="space-y-6">
+                    <LanguageLevels form={form} language="french" />
+                    <LanguageLevels form={form} language="english" />
+                    <LanguageLevels form={form} language="wolof" />
+                  </div>
+                </div>
 
                 <div className="flex justify-end space-x-4">
                   <Button
