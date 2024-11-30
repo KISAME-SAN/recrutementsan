@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -23,6 +23,7 @@ import { supabase } from "@/lib/supabase";
 
 const JobDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const { data: job, isLoading } = useQuery({
     queryKey: ["job", id],
@@ -186,7 +187,7 @@ const JobDetails = () => {
               <Button 
                 size="lg" 
                 className="w-full md:w-auto"
-                onClick={() =>  navigate(`/jobs/${id}/apply`)}
+                onClick={() => navigate(`/jobs/${id}/apply`)}
               >
                 Postuler maintenant
               </Button>
