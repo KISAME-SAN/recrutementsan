@@ -26,6 +26,7 @@ CREATE TABLE jobs (
   english_level TEXT NOT NULL,
   wolof_level TEXT NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
   created_by UUID REFERENCES profiles(id),
   is_active BOOLEAN DEFAULT TRUE
 );
