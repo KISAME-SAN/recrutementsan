@@ -29,20 +29,12 @@ const Navbar = () => {
                 Offres d'emploi
               </a>
               {isAdmin && (
-                <>
-                  <a
-                    href="/admin/manage-jobs"
-                    className="text-gray-600 hover:text-primary transition-colors"
-                  >
-                    Gérer les offres
-                  </a>
-                  <a
-                    href="/admin/manage-applications"
-                    className="text-gray-600 hover:text-primary transition-colors"
-                  >
-                    Gérer les candidatures
-                  </a>
-                </>
+                <a
+                  href="/admin"
+                  className="text-gray-600 hover:text-primary transition-colors"
+                >
+                  Panneau d'administration
+                </a>
               )}
             </div>
           </div>
