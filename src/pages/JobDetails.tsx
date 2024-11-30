@@ -1,17 +1,19 @@
 import Navbar from "@/components/Navbar";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Calendar, 
   MapPin, 
   Briefcase, 
   Clock, 
-  GraduationCap, 
-  Languages, 
-  Target, 
+  GraduationCap,
+  Target,
   Users,
-  Building
+  Building,
+  CheckCircle2,
+  Laptop2,
+  Brain,
+  BookOpen
 } from "lucide-react";
 
 const JobDetails = () => {
@@ -22,7 +24,13 @@ const JobDetails = () => {
         <div className="container mx-auto px-4">
           <Card className="max-w-4xl mx-auto p-8">
             <div className="mb-8">
-              <h1 className="text-3xl font-bold text-primary mb-4">Conseiller Immobilier Senior</h1>
+              <div className="flex justify-between items-start mb-4">
+                <h1 className="text-3xl font-bold text-primary">Conseiller Immobilier Senior</h1>
+                <span className="bg-secondary/10 text-secondary px-3 py-1 rounded-full text-sm font-medium">
+                  2 postes disponibles
+                </span>
+              </div>
+              
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <MapPin className="h-4 w-4" />
@@ -46,137 +54,93 @@ const JobDetails = () => {
                 </div>
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <GraduationCap className="h-4 w-4" />
-                  <span>Bac +3 minimum</span>
+                  <span>Bac +3 en Commerce/Immobilier</span>
                 </div>
               </div>
             </div>
 
-            <Tabs defaultValue="fr" className="mb-8">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="fr">Français</TabsTrigger>
-                <TabsTrigger value="en">English</TabsTrigger>
-                <TabsTrigger value="wo">Wolof</TabsTrigger>
-              </TabsList>
-              <TabsContent value="fr" className="space-y-6">
-                <section className="space-y-4">
-                  <h2 className="text-xl font-semibold flex items-center gap-2">
-                    <Target className="h-5 w-5" />
-                    Description du poste
-                  </h2>
-                  <p className="text-muted-foreground">
-                    En tant que Conseiller Immobilier Senior, vous serez responsable de la gestion 
-                    et du développement d'un portefeuille de biens immobiliers haut de gamme. Vous 
-                    accompagnerez nos clients dans leurs projets d'acquisition ou de vente, en 
-                    leur apportant une expertise pointue du marché immobilier parisien.
-                  </p>
-                </section>
+            <div className="space-y-8">
+              <section className="space-y-4">
+                <h2 className="text-xl font-semibold flex items-center gap-2">
+                  <Target className="h-5 w-5" />
+                  Description du poste
+                </h2>
+                <p className="text-muted-foreground">
+                  En tant que Conseiller Immobilier Senior, vous serez responsable de la gestion 
+                  et du développement d'un portefeuille de biens immobiliers haut de gamme. Vous 
+                  accompagnerez nos clients dans leurs projets d'acquisition ou de vente, en 
+                  leur apportant une expertise pointue du marché immobilier parisien.
+                </p>
+                <ul className="list-disc list-inside text-muted-foreground space-y-2 ml-4">
+                  <li>Développement et gestion d'un portefeuille clients premium</li>
+                  <li>Prospection active et qualification des opportunités</li>
+                  <li>Estimation et valorisation des biens immobiliers</li>
+                  <li>Négociation et accompagnement jusqu'à la signature</li>
+                  <li>Veille concurrentielle et analyse du marché local</li>
+                </ul>
+              </section>
 
-                <section className="space-y-4">
-                  <h2 className="text-xl font-semibold flex items-center gap-2">
-                    <Users className="h-5 w-5" />
-                    Profil recherché
-                  </h2>
-                  <ul className="list-disc list-inside text-muted-foreground space-y-2">
-                    <li>5 ans d'expérience minimum dans l'immobilier de luxe</li>
-                    <li>Excellentes capacités de négociation et de communication</li>
-                    <li>Maîtrise des outils digitaux et des réseaux sociaux</li>
-                    <li>Grande disponibilité et flexibilité horaire</li>
-                  </ul>
-                </section>
+              <section className="space-y-4">
+                <h2 className="text-xl font-semibold flex items-center gap-2">
+                  <CheckCircle2 className="h-5 w-5" />
+                  Compétences techniques requises
+                </h2>
+                <ul className="list-disc list-inside text-muted-foreground space-y-2 ml-4">
+                  <li>Maîtrise des techniques de prospection et de négociation</li>
+                  <li>Connaissance approfondie du marché immobilier parisien</li>
+                  <li>Expertise en évaluation immobilière</li>
+                  <li>Compréhension des aspects juridiques de l'immobilier</li>
+                  <li>Maîtrise du droit immobilier et des contrats de vente</li>
+                </ul>
+              </section>
 
-                <section className="space-y-4">
-                  <h2 className="text-xl font-semibold flex items-center gap-2">
-                    <Languages className="h-5 w-5" />
-                    Compétences linguistiques
-                  </h2>
-                  <ul className="list-disc list-inside text-muted-foreground space-y-2">
-                    <li>Français : Natif ou C2</li>
-                    <li>Anglais : B2 minimum</li>
-                  </ul>
-                </section>
-              </TabsContent>
+              <section className="space-y-4">
+                <h2 className="text-xl font-semibold flex items-center gap-2">
+                  <Brain className="h-5 w-5" />
+                  Compétences comportementales
+                </h2>
+                <ul className="list-disc list-inside text-muted-foreground space-y-2 ml-4">
+                  <li>Excellence relationnelle et sens du service client</li>
+                  <li>Capacité d'écoute et d'analyse des besoins</li>
+                  <li>Rigueur et organisation dans le suivi des dossiers</li>
+                  <li>Autonomie et esprit d'initiative</li>
+                  <li>Résilience et gestion du stress</li>
+                </ul>
+              </section>
 
-              <TabsContent value="en" className="space-y-6">
-                <section className="space-y-4">
-                  <h2 className="text-xl font-semibold flex items-center gap-2">
-                    <Target className="h-5 w-5" />
-                    Job Description
-                  </h2>
-                  <p className="text-muted-foreground">
-                    As a Senior Real Estate Advisor, you will be responsible for managing and 
-                    developing a portfolio of high-end properties. You will assist our clients 
-                    in their acquisition or sale projects, providing them with expert knowledge 
-                    of the Parisian real estate market.
-                  </p>
-                </section>
+              <section className="space-y-4">
+                <h2 className="text-xl font-semibold flex items-center gap-2">
+                  <Laptop2 className="h-5 w-5" />
+                  Outils à maîtriser
+                </h2>
+                <ul className="list-disc list-inside text-muted-foreground space-y-2 ml-4">
+                  <li>Suite Microsoft Office (Excel, Word, PowerPoint)</li>
+                  <li>CRM immobilier</li>
+                  <li>Outils de signature électronique</li>
+                  <li>Logiciels d'estimation immobilière</li>
+                  <li>Réseaux sociaux professionnels</li>
+                </ul>
+              </section>
 
-                <section className="space-y-4">
-                  <h2 className="text-xl font-semibold flex items-center gap-2">
-                    <Users className="h-5 w-5" />
-                    Required Profile
-                  </h2>
-                  <ul className="list-disc list-inside text-muted-foreground space-y-2">
-                    <li>Minimum 5 years experience in luxury real estate</li>
-                    <li>Excellent negotiation and communication skills</li>
-                    <li>Proficiency in digital tools and social networks</li>
-                    <li>High availability and schedule flexibility</li>
-                  </ul>
-                </section>
+              <section className="space-y-4">
+                <h2 className="text-xl font-semibold flex items-center gap-2">
+                  <BookOpen className="h-5 w-5" />
+                  Formation et expérience
+                </h2>
+                <ul className="list-disc list-inside text-muted-foreground space-y-2 ml-4">
+                  <li>Bac +3 minimum en Commerce, Immobilier ou équivalent</li>
+                  <li>5 ans d'expérience minimum dans l'immobilier de luxe</li>
+                  <li>Carte professionnelle T requise</li>
+                  <li>Formation continue en droit immobilier appréciée</li>
+                </ul>
+              </section>
+            </div>
 
-                <section className="space-y-4">
-                  <h2 className="text-xl font-semibold flex items-center gap-2">
-                    <Languages className="h-5 w-5" />
-                    Language Skills
-                  </h2>
-                  <ul className="list-disc list-inside text-muted-foreground space-y-2">
-                    <li>French: Native or C2</li>
-                    <li>English: B2 minimum</li>
-                  </ul>
-                </section>
-              </TabsContent>
-
-              <TabsContent value="wo" className="space-y-6">
-                <section className="space-y-4">
-                  <h2 className="text-xl font-semibold flex items-center gap-2">
-                    <Target className="h-5 w-5" />
-                    Tëralinu Liggéey bi
-                  </h2>
-                  <p className="text-muted-foreground">
-                    Ni Conseiller Immobilier Senior, dinga saytu ak yokk portefeuille bu am 
-                    këri yu baax. Dinga ànd ak sunu clients yi ci seeni projets jënd walla 
-                    jaay, di leen jox xam-xam bu mat ci marché immobilier bu Paris.
-                  </p>
-                </section>
-
-                <section className="space-y-4">
-                  <h2 className="text-xl font-semibold flex items-center gap-2">
-                    <Users className="h-5 w-5" />
-                    Profil bi ñuy seet
-                  </h2>
-                  <ul className="list-disc list-inside text-muted-foreground space-y-2">
-                    <li>5 at minimum ci immobilier bu rafet</li>
-                    <li>Meñ négociation ak communication bu baax</li>
-                    <li>Xam digital tools ak réseaux sociaux yi</li>
-                    <li>Am disponibilité ak flexibilité ci waxtu yi</li>
-                  </ul>
-                </section>
-
-                <section className="space-y-4">
-                  <h2 className="text-xl font-semibold flex items-center gap-2">
-                    <Languages className="h-5 w-5" />
-                    Xam-xam ci làkk yi
-                  </h2>
-                  <ul className="list-disc list-inside text-muted-foreground space-y-2">
-                    <li>Français : Làkk dégg walla C2</li>
-                    <li>Anglais : B2 minimum</li>
-                  </ul>
-                </section>
-              </TabsContent>
-            </Tabs>
-
-            <Button size="lg" className="w-full md:w-auto">
-              Postuler maintenant
-            </Button>
+            <div className="mt-8">
+              <Button size="lg" className="w-full md:w-auto">
+                Postuler maintenant
+              </Button>
+            </div>
           </Card>
         </div>
       </div>
