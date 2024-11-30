@@ -1,3 +1,8 @@
+-- Supprimer les politiques existantes si elles existent
+DROP POLICY IF EXISTS "Les utilisateurs authentifiés peuvent créer des candidatures" ON applications;
+DROP POLICY IF EXISTS "Les utilisateurs peuvent voir leurs propres candidatures" ON applications;
+DROP POLICY IF EXISTS "Les admins peuvent tout faire avec les candidatures" ON applications;
+
 -- Création de la table applications si elle n'existe pas
 CREATE TABLE IF NOT EXISTS applications (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
