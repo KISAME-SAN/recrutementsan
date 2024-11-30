@@ -24,7 +24,7 @@ export const LanguageLevels = ({ form, language }: { form: any; language: string
               <Slider
                 min={0}
                 max={100}
-                step={33.33}
+                step={1}
                 value={[field.value ? levels.indexOf(field.value) * 33.33 : 0]}
                 onValueChange={(value) => {
                   field.onChange(getLevelLabel(value[0]));
