@@ -183,7 +183,11 @@ const JobDetails = () => {
             </div>
 
             <div className="mt-8">
-              <Button size="lg" className="w-full md:w-auto">
+              <Button 
+                size="lg" 
+                className="w-full md:w-auto"
+                onClick={() =>  navigate(`/jobs/${id}/apply`)}
+              >
                 Postuler maintenant
               </Button>
             </div>

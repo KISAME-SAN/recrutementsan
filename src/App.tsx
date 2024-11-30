@@ -13,6 +13,9 @@ import Admin from "./pages/Admin";
 import CreateJob from "./pages/CreateJob";
 import ManageJobs from "./pages/ManageJobs";
 import EditJob from "./pages/EditJob";
+import Apply from "./pages/Apply";
+import ManageApplications from "./pages/ManageApplications";
+import JobApplications from "./pages/JobApplications";
 
 const queryClient = new QueryClient();
 
@@ -27,12 +30,15 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/jobs" element={<Jobs />} />
             <Route path="/jobs/:id" element={<JobDetails />} />
+            <Route path="/jobs/:id/apply" element={<Apply />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/admin/create-job" element={<CreateJob />} />
             <Route path="/admin/manage-jobs" element={<ManageJobs />} />
             <Route path="/admin/edit-job/:id" element={<EditJob />} />
+            <Route path="/admin/applications" element={<ManageApplications />} />
+            <Route path="/admin/applications/:id" element={<JobApplications />} />
           </Routes>
         </BrowserRouter>
       </AdminProvider>
