@@ -3,7 +3,8 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
 import { supabase } from "@/lib/supabase";
-import { ApplicationForm, ApplicationFormData } from "@/components/application/ApplicationForm";
+import { ApplicationForm } from "@/components/application/ApplicationForm";
+import { ApplicationFormData } from "@/types/application";
 
 const Apply = () => {
   const { id } = useParams();
