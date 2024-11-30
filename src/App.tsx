@@ -12,6 +12,7 @@ import Register from "./pages/Register";
 import Admin from "./pages/Admin";
 import CreateJob from "./pages/CreateJob";
 import ManageJobs from "./pages/ManageJobs";
+import EditJob from "./pages/EditJob";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,7 @@ const App = () => (
             <Route path="/admin" element={<Admin />} />
             <Route path="/admin/create-job" element={<CreateJob />} />
             <Route path="/admin/manage-jobs" element={<ManageJobs />} />
+            <Route path="/admin/edit-job/:id" element={<EditJob />} />
           </Routes>
         </BrowserRouter>
       </AdminProvider>

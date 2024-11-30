@@ -13,15 +13,13 @@ import { fr } from "date-fns/locale";
 import { Edit, Trash, ToggleLeft, ToggleRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 
 const ManageJobs = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  // Récupération des offres
   const { data: jobs, isLoading } = useQuery({
     queryKey: ["jobs"],
     queryFn: async () => {
@@ -35,7 +33,6 @@ const ManageJobs = () => {
     },
   });
 
-  // Mutation pour activer/désactiver une offre
   const toggleActiveMutation = useMutation({
     mutationFn: async ({ jobId, isActive }: { jobId: string; isActive: boolean }) => {
       const { error } = await supabase
@@ -47,20 +44,14 @@ const ManageJobs = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["jobs"] });
-      toast({
-        description: "Le statut de l'offre a été mis à jour",
-      });
+      toast.success("Le statut de l'offre a été mis à jour");
     },
     onError: (error) => {
       console.error("Erreur lors de la mise à jour du statut:", error);
-      toast({
-        variant: "destructive",
-        description: "Erreur lors de la mise à jour du statut",
-      });
+      toast.error("Erreur lors de la mise à jour du statut");
     },
   });
 
-  // Mutation pour supprimer une offre
   const deleteMutation = useMutation({
     mutationFn: async (jobId: string) => {
       const { error } = await supabase
@@ -72,16 +63,11 @@ const ManageJobs = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["jobs"] });
-      toast({
-        description: "L'offre a été supprimée avec succès",
-      });
+      toast.success("L'offre a été supprimée avec succès");
     },
     onError: (error) => {
       console.error("Erreur lors de la suppression:", error);
-      toast({
-        variant: "destructive",
-        description: "Erreur lors de la suppression de l'offre",
-      });
+      toast.error("Erreur lors de la suppression de l'offre");
     },
   });
 
