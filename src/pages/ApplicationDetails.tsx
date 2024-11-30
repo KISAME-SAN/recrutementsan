@@ -1,12 +1,21 @@
 import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import Navbar from "@/components/Navbar";
 import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
 
 const ApplicationDetails = () => {
   const { id } = useParams();
+  const queryClient = useQueryClient();
 
   const { data: application, isLoading } = useQuery({
     queryKey: ["application-details", id],
@@ -19,6 +28,24 @@ const ApplicationDetails = () => {
 
       if (error) throw error;
       return data;
+    },
+  });
+
+  const updateStatusMutation = useMutation({
+    mutationFn: async (newStatus: string) => {
+      const { error } = await supabase
+        .from("applications")
+        .update({ status: newStatus })
+        .eq("id", id);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["application-details", id] });
+      toast.success("Statut mis à jour avec succès");
+    },
+    onError: () => {
+      toast.error("Erreur lors de la mise à jour du statut");
     },
   });
 
@@ -151,20 +178,28 @@ const ApplicationDetails = () => {
                   </div>
                 </div>
 
-                {/* Statut */}
+                {/* Statut avec sélecteur */}
                 <div className="pt-4 border-t">
-                  <div className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium" 
-                       style={{
-                         backgroundColor: 
-                           application?.status === "accepter" ? "rgb(34 197 94 / 0.1)" :
-                           application?.status === "refuser" ? "rgb(239 68 68 / 0.1)" :
-                           "rgb(234 179 8 / 0.1)",
-                         color:
-                           application?.status === "accepter" ? "rgb(34 197 94)" :
-                           application?.status === "refuser" ? "rgb(239 68 68)" :
-                           "rgb(234 179 8)"
-                       }}>
-                    {application?.status}
+                  <div className="flex items-center gap-4">
+                    <h2 className="text-xl font-semibold text-primary">
+                      Statut de la candidature
+                    </h2>
+                    <Select
+                      value={application?.status}
+                      onValueChange={(value) => updateStatusMutation.mutate(value)}
+                    >
+                      <SelectTrigger className="w-[200px]">
+                        <SelectValue placeholder="Sélectionner un statut" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="en attente">En attente</SelectItem>
+                        <SelectItem value="en cours d'examination">
+                          En cours d'examination
+                        </SelectItem>
+                        <SelectItem value="accepter">Accepté</SelectItem>
+                        <SelectItem value="refuser">Refusé</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
               </div>
