@@ -25,26 +25,40 @@ const Apply = () => {
 
   const applyMutation = useMutation({
     mutationFn: async (values: ApplicationFormData) => {
+      console.log("Début de la mutation avec les valeurs:", values);
+      
       const user = await supabase.auth.getUser();
-      if (!user.data.user) throw new Error("Vous devez être connecté");
+      if (!user.data.user) {
+        console.error("Utilisateur non connecté");
+        throw new Error("Vous devez être connecté");
+      }
 
       // Upload CV
       const cvFile = values.cv;
-      const cvPath = `applications/${user.data.user.id}/${id}/cv-${Date.now()}${cvFile.name}`;
+      const cvPath = `applications/${user.data.user.id}/${id}/cv-${Date.now()}-${cvFile.name}`;
+      console.log("Uploading CV to:", cvPath);
       const { error: cvError } = await supabase.storage
         .from("documents")
         .upload(cvPath, cvFile);
-      if (cvError) throw cvError;
+      if (cvError) {
+        console.error("Erreur upload CV:", cvError);
+        throw cvError;
+      }
 
       // Upload Cover Letter
       const clFile = values.coverLetter;
-      const clPath = `applications/${user.data.user.id}/${id}/cl-${Date.now()}${clFile.name}`;
+      const clPath = `applications/${user.data.user.id}/${id}/cl-${Date.now()}-${clFile.name}`;
+      console.log("Uploading Cover Letter to:", clPath);
       const { error: clError } = await supabase.storage
         .from("documents")
         .upload(clPath, clFile);
-      if (clError) throw clError;
+      if (clError) {
+        console.error("Erreur upload lettre de motivation:", clError);
+        throw clError;
+      }
 
       // Create application
+      console.log("Création de la candidature dans la base de données");
       const { error: applicationError } = await supabase.from("applications").insert({
         job_id: id,
         user_id: user.data.user.id,
@@ -63,15 +77,20 @@ const Apply = () => {
         cover_letter_url: clPath,
       });
 
-      if (applicationError) throw applicationError;
+      if (applicationError) {
+        console.error("Erreur création candidature:", applicationError);
+        throw applicationError;
+      }
+      
+      console.log("Candidature créée avec succès");
     },
     onSuccess: () => {
       toast.success("Votre candidature a été envoyée avec succès");
       navigate("/jobs");
     },
-    onError: (error) => {
-      console.error("Erreur lors de l'envoi de la candidature:", error);
-      toast.error("Erreur lors de l'envoi de la candidature");
+    onError: (error: Error) => {
+      console.error("Erreur complète:", error);
+      toast.error("Erreur lors de l'envoi de la candidature: " + error.message);
     },
   });
 
