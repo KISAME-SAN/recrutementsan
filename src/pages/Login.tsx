@@ -7,7 +7,6 @@ import { useAdmin } from "@/contexts/AdminContext";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import Navbar from "@/components/Navbar";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -16,25 +15,19 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [emailNotConfirmed, setEmailNotConfirmed] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setEmailNotConfirmed(false);
     
     const { error } = await login(email, password);
     
     if (error) {
-      if (error.message.includes("Email not confirmed")) {
-        setEmailNotConfirmed(true);
-      } else {
-        toast({
-          title: "Erreur de connexion",
-          description: "Email ou mot de passe incorrect",
-          variant: "destructive",
-        });
-      }
+      toast({
+        title: "Erreur de connexion",
+        description: "Email ou mot de passe incorrect",
+        variant: "destructive",
+      });
     } else {
       toast({
         title: "Connexion réussie",
@@ -52,13 +45,6 @@ const Login = () => {
       <div className="min-h-screen pt-24 px-4">
         <Card className="max-w-md mx-auto p-6">
           <h1 className="text-2xl font-bold mb-6">Connexion</h1>
-          {emailNotConfirmed && (
-            <Alert variant="destructive" className="mb-4">
-              <AlertDescription>
-                Veuillez confirmer votre email avant de vous connecter. Vérifiez votre boîte de réception.
-              </AlertDescription>
-            </Alert>
-          )}
           <form className="space-y-4" onSubmit={handleSubmit}>
             <div>
               <Label htmlFor="email">Email</Label>
