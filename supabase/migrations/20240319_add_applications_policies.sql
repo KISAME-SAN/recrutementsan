@@ -30,20 +30,23 @@ ALTER TABLE applications ENABLE ROW LEVEL SECURITY;
 -- Politique pour permettre aux utilisateurs authentifiés de créer des candidatures
 CREATE POLICY "Les utilisateurs authentifiés peuvent créer des candidatures"
   ON applications FOR INSERT
-  WITH CHECK (auth.role() = 'authenticated');
+  TO authenticated
+  WITH CHECK (true);
 
 -- Politique pour permettre aux utilisateurs de voir leurs propres candidatures
 CREATE POLICY "Les utilisateurs peuvent voir leurs propres candidatures"
   ON applications FOR SELECT
+  TO authenticated
   USING (auth.uid() = user_id);
 
--- Politique pour permettre aux admins de tout voir
+-- Politique pour permettre aux admins de tout faire
 CREATE POLICY "Les admins peuvent tout faire avec les candidatures"
   ON applications FOR ALL
+  TO authenticated
   USING (
     EXISTS (
       SELECT 1 FROM profiles
       WHERE profiles.id = auth.uid()
-      AND profiles.is_admin = TRUE
+      AND profiles.is_admin = true
     )
   );
