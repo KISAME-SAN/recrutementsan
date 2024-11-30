@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import Navbar from "@/components/Navbar";
 import {
   Table,
@@ -10,21 +10,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Eye, FileText } from "lucide-react";
-import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 
 const JobApplications = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
 
   const { data: applications, isLoading } = useQuery({
     queryKey: ["job-applications", id],
@@ -40,24 +31,18 @@ const JobApplications = () => {
     },
   });
 
-  const updateStatusMutation = useMutation({
-    mutationFn: async ({ applicationId, status }: { applicationId: string; status: string }) => {
-      const { error } = await supabase
-        .from("applications")
-        .update({ status })
-        .eq("id", applicationId);
-
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["job-applications", id] });
-      toast.success("Statut mis à jour avec succès");
-    },
-    onError: (error) => {
-      console.error("Erreur lors de la mise à jour du statut:", error);
-      toast.error("Erreur lors de la mise à jour du statut");
-    },
-  });
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "accepter":
+        return "bg-green-100 text-green-600";
+      case "refuser":
+        return "bg-red-100 text-red-600";
+      case "en cours d'examination":
+        return "bg-blue-100 text-blue-600";
+      default:
+        return "bg-yellow-100 text-yellow-600";
+    }
+  };
 
   const getFileUrl = async (path: string) => {
     const { data } = await supabase.storage.from("documents").getPublicUrl(path);
@@ -135,27 +120,9 @@ const JobApplications = () => {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Select
-                        value={application.status}
-                        onValueChange={(value) =>
-                          updateStatusMutation.mutate({
-                            applicationId: application.id,
-                            status: value,
-                          })
-                        }
-                      >
-                        <SelectTrigger className="w-[180px]">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="en attente">En attente</SelectItem>
-                          <SelectItem value="en cours d'examination">
-                            En cours d'examination
-                          </SelectItem>
-                          <SelectItem value="accepter">Accepté</SelectItem>
-                          <SelectItem value="refuser">Refusé</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${getStatusColor(application.status)}`}>
+                        {application.status}
+                      </span>
                     </TableCell>
                     <TableCell className="text-right">
                       <Button

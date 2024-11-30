@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import { supabase } from "@/lib/supabase";
 import { ApplicationForm } from "@/components/application/ApplicationForm";
 import { ApplicationFormData } from "@/types/application";
+import { createApplicationNotification } from "@/utils/notifications";
 
 const Apply = () => {
   const { id } = useParams();
@@ -60,30 +61,38 @@ const Apply = () => {
 
       // Create application
       console.log("Création de la candidature dans la base de données");
-      const { error: applicationError } = await supabase.from("applications").insert({
-        job_id: id,
-        user_id: user.data.user.id,
+      const { data: newApplication, error: applicationError } = await supabase
+        .from("applications")
+        .insert({
+          job_id: id,
+          user_id: user.data.user.id,
+          first_name: values.firstName,
+          last_name: values.lastName,
+          email: values.email,
+          phone: values.phone,
+          gender: values.gender,
+          age: values.age,
+          professional_experience: values.professionalExperience,
+          skills: values.skills,
+          diploma: values.diploma,
+          years_of_experience: values.yearsOfExperience,
+          previous_company: values.previousCompany,
+          cv_url: cvPath,
+          cover_letter_url: clPath,
+        })
+        .select()
+        .single();
+
+      if (applicationError) throw applicationError;
+
+      // Create notification
+      await createApplicationNotification({
         first_name: values.firstName,
         last_name: values.lastName,
-        email: values.email,
-        phone: values.phone,
-        gender: values.gender,
-        age: values.age,
-        professional_experience: values.professionalExperience,
-        skills: values.skills,
-        diploma: values.diploma,
-        years_of_experience: values.yearsOfExperience,
-        previous_company: values.previousCompany,
-        cv_url: cvPath,
-        cover_letter_url: clPath,
+        job_id: id,
       });
 
-      if (applicationError) {
-        console.error("Erreur création candidature:", applicationError);
-        throw applicationError;
-      }
-      
-      console.log("Candidature créée avec succès");
+      return newApplication;
     },
     onSuccess: () => {
       toast.success("Votre candidature a été envoyée avec succès");

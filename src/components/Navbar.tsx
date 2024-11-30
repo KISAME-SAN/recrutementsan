@@ -1,39 +1,85 @@
-import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { useAdmin } from "@/contexts/AdminContext";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
+import { LogIn, LogOut, UserPlus } from "lucide-react";
+import NotificationBell from "./NotificationBell";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const { isAdmin, logout } = useAdmin();
+  const { user, signOut, isAdmin } = useAuth();
 
-  const handleLogout = () => {
-    logout();
+  const handleSignOut = async () => {
+    await signOut();
     navigate("/");
   };
 
   return (
-    <nav className="fixed top-0 w-full bg-white/90 backdrop-blur-sm z-50 shadow-sm">
-      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <div className="text-2xl font-bold text-primary cursor-pointer" onClick={() => navigate("/")}>
-          Kisame
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200">
+      <div className="container mx-auto px-4">
+        <div className="flex justify-between items-center h-16">
+          <div className="flex items-center gap-8">
+            <a href="/" className="text-xl font-bold text-primary">
+              JobBoard
+            </a>
+            <div className="hidden md:flex items-center gap-6">
+              <a
+                href="/jobs"
+                className="text-gray-600 hover:text-primary transition-colors"
+              >
+                Offres d'emploi
+              </a>
+              {isAdmin && (
+                <>
+                  <a
+                    href="/admin/manage-jobs"
+                    className="text-gray-600 hover:text-primary transition-colors"
+                  >
+                    Gérer les offres
+                  </a>
+                  <a
+                    href="/admin/manage-applications"
+                    className="text-gray-600 hover:text-primary transition-colors"
+                  >
+                    Gérer les candidatures
+                  </a>
+                </>
+              )}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4">
+            {isAdmin && <NotificationBell />}
+            {user ? (
+              <Button
+                variant="ghost"
+                className="gap-2"
+                onClick={handleSignOut}
+              >
+                <LogOut className="h-5 w-5" />
+                <span>Déconnexion</span>
+              </Button>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  className="gap-2"
+                  onClick={() => navigate("/login")}
+                >
+                  <LogIn className="h-5 w-5" />
+                  <span>Connexion</span>
+                </Button>
+                <Button
+                  variant="default"
+                  className="gap-2"
+                  onClick={() => navigate("/register")}
+                >
+                  <UserPlus className="h-5 w-5" />
+                  <span>Inscription</span>
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
-        <div className="hidden md:flex space-x-6">
-          <Button variant="ghost" onClick={() => navigate("/jobs")}>Offres d'emploi</Button>
-          {isAdmin ? (
-            <>
-              <Button variant="ghost" onClick={() => navigate("/admin")}>Panneau admin</Button>
-              <Button variant="ghost" onClick={handleLogout}>Se déconnecter</Button>
-            </>
-          ) : (
-            <>
-              <Button variant="ghost" onClick={() => navigate("/login")}>Se connecter</Button>
-              <Button variant="default" onClick={() => navigate("/register")}>S'inscrire</Button>
-            </>
-          )}
-        </div>
-        <Button variant="outline" className="md:hidden">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-        </Button>
       </div>
     </nav>
   );
