@@ -22,6 +22,10 @@ const NotificationBell = () => {
       if (error) throw error;
       return data;
     },
+    // Rafraîchir toutes les 10 secondes
+    refetchInterval: 10000,
+    // Rafraîchir quand la fenêtre reprend le focus
+    refetchOnWindowFocus: true,
   });
 
   const unreadCount = notifications?.filter(n => !n.read).length || 0;
