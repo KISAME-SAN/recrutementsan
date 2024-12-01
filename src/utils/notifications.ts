@@ -8,7 +8,7 @@ export const createApplicationNotification = async (application: {
   console.log("Début de la création de notification pour:", application);
 
   try {
-    // Récupérer le titre du poste
+    // Récupérer le titre du poste et le créateur
     const { data: job, error: jobError } = await supabase
       .from("jobs")
       .select("title, created_by")
@@ -26,7 +26,14 @@ export const createApplicationNotification = async (application: {
       throw error;
     }
 
+    if (!job.created_by) {
+      const error = new Error("Le job n'a pas de créateur (created_by est null)");
+      console.error(error);
+      throw error;
+    }
+
     console.log("Job trouvé:", job);
+    console.log("Créateur du job (user_id):", job.created_by);
 
     // Créer la notification pour le créateur de l'offre
     const { data: notification, error: notificationError } = await supabase
