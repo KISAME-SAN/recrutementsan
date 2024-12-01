@@ -28,12 +28,15 @@ export const createApplicationNotification = async (application: {
 
     console.log("Job trouvé:", job);
 
-    // Récupérer le premier administrateur trouvé
+    // Récupérer le premier administrateur trouvé avec plus de logs
+    console.log("Recherche des administrateurs...");
     const { data: admins, error: adminError } = await supabase
       .from("profiles")
-      .select("id")
+      .select("*")  // Sélectionner tous les champs pour le debug
       .eq("is_admin", true)
       .limit(1);
+
+    console.log("Résultat de la requête admin:", { admins, adminError });
 
     if (adminError) {
       console.error("Erreur lors de la récupération de l'admin:", adminError);
@@ -41,13 +44,14 @@ export const createApplicationNotification = async (application: {
     }
 
     if (!admins || admins.length === 0) {
+      console.error("Aucun admin trouvé dans la base de données");
+      console.error("Contenu de la réponse:", admins);
       const error = new Error("Aucun administrateur trouvé");
-      console.error(error);
       throw error;
     }
 
     const adminId = admins[0].id;
-    console.log("Admin trouvé:", adminId);
+    console.log("Admin trouvé:", admins[0]);
 
     // Créer la notification
     const { data: notification, error: notificationError } = await supabase
