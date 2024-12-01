@@ -8,25 +8,70 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
+import { useEffect, useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 const NotificationBell = () => {
-  const { data: notifications } = useQuery({
-    queryKey: ["notifications"],
-    queryFn: async () => {
+  const { toast } = useToast();
+  const [notifications, setNotifications] = useState<any[]>([]);
+
+  // Charger les notifications initiales
+  useEffect(() => {
+    const loadNotifications = async () => {
       const { data, error } = await supabase
         .from("notifications")
         .select("*")
         .order("created_at", { ascending: false })
         .limit(5);
 
-      if (error) throw error;
-      return data;
-    },
-    // Rafraîchir toutes les 10 secondes
-    refetchInterval: 10000,
-    // Rafraîchir quand la fenêtre reprend le focus
-    refetchOnWindowFocus: true,
-  });
+      if (error) {
+        console.error("Erreur lors du chargement des notifications:", error);
+        return;
+      }
+
+      if (data) {
+        setNotifications(data);
+      }
+    };
+
+    loadNotifications();
+  }, []);
+
+  // Configurer l'écoute Realtime
+  useEffect(() => {
+    const channel = supabase
+      .channel('notifications')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'notifications'
+        },
+        (payload) => {
+          console.log('Nouvelle notification reçue:', payload);
+          const newNotification = payload.new;
+          
+          // Ajouter la nouvelle notification à l'état
+          setNotifications(currentNotifications => {
+            const updatedNotifications = [newNotification, ...currentNotifications].slice(0, 5);
+            return updatedNotifications;
+          });
+
+          // Afficher un toast pour la nouvelle notification
+          toast({
+            title: newNotification.title,
+            description: newNotification.message,
+          });
+        }
+      )
+      .subscribe();
+
+    // Cleanup lors du démontage du composant
+    return () => {
+      channel.unsubscribe();
+    };
+  }, [toast]);
 
   const unreadCount = notifications?.filter(n => !n.read).length || 0;
 
