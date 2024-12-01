@@ -34,7 +34,6 @@ export const createApplicationNotification = async (application: {
       .insert({
         title: "Nouvelle candidature",
         message: `${application.first_name} ${application.last_name} a postulé pour le poste "${job.title}"`,
-        type: "application",
         read: false
       })
       .select()
