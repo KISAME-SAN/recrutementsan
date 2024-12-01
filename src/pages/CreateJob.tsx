@@ -20,6 +20,19 @@ const CreateJob = () => {
   const onSubmit = async (values: z.infer<typeof createJobFormSchema>) => {
     setIsSubmitting(true);
     try {
+      // Récupérer l'utilisateur connecté
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      
+      if (userError) {
+        throw new Error("Vous devez être connecté pour créer une offre");
+      }
+
+      if (!user) {
+        throw new Error("Utilisateur non trouvé");
+      }
+
+      console.log("Création d'une offre par l'utilisateur:", user.id);
+
       const { error } = await supabase.from("jobs").insert([
         {
           title: values.title,
@@ -37,6 +50,7 @@ const CreateJob = () => {
           french_level: values.frenchLevel,
           english_level: values.englishLevel,
           wolof_level: values.wolofLevel,
+          created_by: user.id, // Ajouter l'ID de l'utilisateur connecté
         },
       ]);
 
