@@ -85,11 +85,12 @@ const Apply = () => {
 
       if (applicationError) throw applicationError;
 
-      // Create notification
+      // Créer la notification après la création réussie de la candidature
+      console.log("Création de la notification");
       await createApplicationNotification({
         first_name: values.firstName,
         last_name: values.lastName,
-        job_id: id,
+        job_id: id as string,
       });
 
       return newApplication;

@@ -5,27 +5,43 @@ export const createApplicationNotification = async (application: {
   last_name: string;
   job_id: string;
 }) => {
+  console.log("Début de la création de notification pour:", application);
+
   // Récupérer le titre du poste
-  const { data: job } = await supabase
+  const { data: job, error: jobError } = await supabase
     .from("jobs")
     .select("title")
     .eq("id", application.job_id)
     .single();
 
-  if (!job) {
-    console.error("Job not found");
+  if (jobError) {
+    console.error("Erreur lors de la récupération du job:", jobError);
     return;
   }
 
-  // Créer la notification
-  const { error } = await supabase.from("notifications").insert({
-    title: "Nouvelle candidature",
-    message: `${application.first_name} ${application.last_name} a postulé pour le poste "${job.title}"`,
-    type: "application",
-    read: false,
-  });
-
-  if (error) {
-    console.error("Error creating notification:", error);
+  if (!job) {
+    console.error("Job non trouvé pour l'id:", application.job_id);
+    return;
   }
+
+  console.log("Job trouvé:", job);
+
+  // Créer la notification
+  const { data: notification, error: notificationError } = await supabase
+    .from("notifications")
+    .insert({
+      title: "Nouvelle candidature",
+      message: `${application.first_name} ${application.last_name} a postulé pour le poste "${job.title}"`,
+      type: "application",
+      read: false,
+    })
+    .select()
+    .single();
+
+  if (notificationError) {
+    console.error("Erreur lors de la création de la notification:", notificationError);
+    return;
+  }
+
+  console.log("Notification créée avec succès:", notification);
 };
