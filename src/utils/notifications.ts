@@ -28,7 +28,7 @@ export const createApplicationNotification = async (application: {
 
     console.log("Job trouvé:", job);
 
-    // Créer directement la notification
+    // Créer la notification
     const { data: notification, error: notificationError } = await supabase
       .from("notifications")
       .insert({
