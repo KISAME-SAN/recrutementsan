@@ -34,3 +34,7 @@ CREATE POLICY "Tout le monde peut créer des notifications"
 
 -- Permettre l'insertion de notifications sans user_id
 ALTER TABLE notifications ALTER COLUMN user_id DROP NOT NULL;
+
+-- Supprimer les anciennes politiques si elles existent
+DROP POLICY IF EXISTS "Enable insert for authenticated users only" ON notifications;
+DROP POLICY IF EXISTS "Enable read access for users based on user_id" ON notifications;
