@@ -11,7 +11,7 @@ export const createApplicationNotification = async (application: {
     // Récupérer le titre du poste
     const { data: job, error: jobError } = await supabase
       .from("jobs")
-      .select("title")
+      .select("title, created_by")
       .eq("id", application.job_id)
       .single();
 
@@ -28,13 +28,14 @@ export const createApplicationNotification = async (application: {
 
     console.log("Job trouvé:", job);
 
-    // Créer la notification
+    // Créer la notification pour le créateur de l'offre
     const { data: notification, error: notificationError } = await supabase
       .from("notifications")
       .insert({
         title: "Nouvelle candidature",
         message: `${application.first_name} ${application.last_name} a postulé pour le poste "${job.title}"`,
-        read: false
+        read: false,
+        user_id: job.created_by // Ajouter le user_id du créateur de l'offre
       })
       .select()
       .single();
