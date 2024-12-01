@@ -8,12 +8,14 @@ export const createApplicationNotification = async (application: {
   console.log("Début de la création de notification pour:", application);
 
   try {
-    // Récupérer le titre du poste et le créateur
+    // Récupérer le titre du poste et le créateur avec plus de détails
     const { data: job, error: jobError } = await supabase
       .from("jobs")
-      .select("title, created_by")
+      .select("*, created_by")
       .eq("id", application.job_id)
       .single();
+
+    console.log("Données complètes du job récupéré:", job);
 
     if (jobError) {
       console.error("Erreur lors de la récupération du job:", jobError);
@@ -27,12 +29,22 @@ export const createApplicationNotification = async (application: {
     }
 
     if (!job.created_by) {
-      const error = new Error("Le job n'a pas de créateur (created_by est null)");
-      console.error(error);
-      throw error;
+      console.error("Job sans créateur:", job);
+      // Au lieu de throw une erreur, on peut créer la notification pour un admin par défaut
+      const { data: adminUser } = await supabase
+        .from("profiles")
+        .select("id")
+        .eq("is_admin", true)
+        .single();
+
+      if (!adminUser) {
+        throw new Error("Aucun administrateur trouvé pour recevoir la notification");
+      }
+      
+      job.created_by = adminUser.id;
+      console.log("Utilisation de l'admin par défaut comme créateur:", adminUser.id);
     }
 
-    console.log("Job trouvé:", job);
     console.log("Créateur du job (user_id):", job.created_by);
 
     // Créer la notification pour le créateur de l'offre
@@ -42,7 +54,7 @@ export const createApplicationNotification = async (application: {
         title: "Nouvelle candidature",
         message: `${application.first_name} ${application.last_name} a postulé pour le poste "${job.title}"`,
         read: false,
-        user_id: job.created_by // Ajouter le user_id du créateur de l'offre
+        user_id: job.created_by
       })
       .select()
       .single();
