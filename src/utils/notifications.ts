@@ -28,19 +28,26 @@ export const createApplicationNotification = async (application: {
 
     console.log("Job trouvé:", job);
 
-    // Récupérer l'ID de l'administrateur
-    const { data: admin, error: adminError } = await supabase
+    // Récupérer le premier administrateur trouvé
+    const { data: admins, error: adminError } = await supabase
       .from("profiles")
       .select("id")
       .eq("is_admin", true)
-      .single();
+      .limit(1);
 
     if (adminError) {
       console.error("Erreur lors de la récupération de l'admin:", adminError);
       throw adminError;
     }
 
-    console.log("Admin trouvé:", admin);
+    if (!admins || admins.length === 0) {
+      const error = new Error("Aucun administrateur trouvé");
+      console.error(error);
+      throw error;
+    }
+
+    const adminId = admins[0].id;
+    console.log("Admin trouvé:", adminId);
 
     // Créer la notification
     const { data: notification, error: notificationError } = await supabase
@@ -50,7 +57,7 @@ export const createApplicationNotification = async (application: {
         message: `${application.first_name} ${application.last_name} a postulé pour le poste "${job.title}"`,
         type: "application",
         read: false,
-        user_id: admin.id, // Assigner la notification à l'admin
+        user_id: adminId,
       })
       .select()
       .single();
