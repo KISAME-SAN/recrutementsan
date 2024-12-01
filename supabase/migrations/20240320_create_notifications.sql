@@ -1,3 +1,10 @@
+-- Suppression des politiques existantes
+DROP POLICY IF EXISTS "Les administrateurs peuvent tout faire avec les notifications" ON notifications;
+DROP POLICY IF EXISTS "Les utilisateurs peuvent voir leurs propres notifications" ON notifications;
+DROP POLICY IF EXISTS "Tout le monde peut créer des notifications" ON notifications;
+DROP POLICY IF EXISTS "Enable insert for authenticated users only" ON notifications;
+DROP POLICY IF EXISTS "Enable read access for users based on user_id" ON notifications;
+
 -- Création de la table notifications
 CREATE TABLE IF NOT EXISTS notifications (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
@@ -34,7 +41,3 @@ CREATE POLICY "Tout le monde peut créer des notifications"
 
 -- Permettre l'insertion de notifications sans user_id
 ALTER TABLE notifications ALTER COLUMN user_id DROP NOT NULL;
-
--- Supprimer les anciennes politiques si elles existent
-DROP POLICY IF EXISTS "Enable insert for authenticated users only" ON notifications;
-DROP POLICY IF EXISTS "Enable read access for users based on user_id" ON notifications;
