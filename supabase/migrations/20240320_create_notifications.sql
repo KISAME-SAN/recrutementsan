@@ -26,3 +26,8 @@ CREATE POLICY "Les administrateurs peuvent tout faire avec les notifications"
 CREATE POLICY "Les utilisateurs peuvent voir leurs propres notifications"
   ON notifications FOR SELECT
   USING (user_id = auth.uid());
+
+-- Nouvelle politique : Tout le monde peut créer des notifications
+CREATE POLICY "Tout le monde peut créer des notifications"
+  ON notifications FOR INSERT
+  WITH CHECK (true);
