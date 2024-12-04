@@ -12,6 +12,7 @@ import {
 import Navbar from "@/components/Navbar";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
+import { createStatusChangeNotification } from "@/utils/notifications";
 
 const ApplicationDetails = () => {
   const { id } = useParams();
@@ -33,18 +34,30 @@ const ApplicationDetails = () => {
 
   const updateStatusMutation = useMutation({
     mutationFn: async (newStatus: string) => {
+      if (application?.status === newStatus) {
+        console.log("Le statut n'a pas changé, pas de mise à jour nécessaire");
+        return;
+      }
+
+      // 1. Mettre à jour le statut de la candidature
       const { error } = await supabase
         .from("applications")
         .update({ status: newStatus })
         .eq("id", id);
 
       if (error) throw error;
+
+      // 2. Créer une notification pour l'utilisateur
+      if (application?.user_id) {
+        await createStatusChangeNotification(id!, application.user_id, newStatus);
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["application-details", id] });
       toast.success("Statut mis à jour avec succès");
     },
-    onError: () => {
+    onError: (error) => {
+      console.error("Erreur lors de la mise à jour:", error);
       toast.error("Erreur lors de la mise à jour du statut");
     },
   });
@@ -137,16 +150,18 @@ const ApplicationDetails = () => {
                   <h2 className="text-xl font-semibold text-primary">
                     Expérience professionnelle
                   </h2>
-                  <p className="whitespace-pre-wrap">
+                  <div className="whitespace-pre-wrap break-words overflow-hidden bg-gray-50 rounded-lg p-4 border">
                     {application?.professional_experience}
-                  </p>
+                  </div>
                 </div>
 
                 <div className="space-y-4">
                   <h2 className="text-xl font-semibold text-primary">
                     Compétences
                   </h2>
-                  <p className="whitespace-pre-wrap">{application?.skills}</p>
+                  <div className="whitespace-pre-wrap break-words overflow-hidden bg-gray-50 rounded-lg p-4 border">
+                    {application?.skills}
+                  </div>
                 </div>
 
                 {/* Documents */}
